@@ -61,6 +61,7 @@ cmLocalNinjaGenerator::~cmLocalNinjaGenerator() = default;
 
 void cmLocalNinjaGenerator::Generate()
 {
+  TEPPO_DEBUG_PRINT("Ninja generate");
   // Compute the path to use when referencing the current output
   // directory from the top output directory.
   this->HomeRelativeOutputPath =

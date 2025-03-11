@@ -188,6 +188,8 @@ std::string cmNinjaTargetGenerator::ComputeFlagsForObject(
   cmSourceFile const* source, const std::string& language,
   const std::string& config, const std::string& objectFileName)
 {
+  TEPPO_DEBUG_PRINT("TEPPO Computing flags for source " << source->GetFullPath());
+  TEPPO_DEBUG_PRINT("TEPPO objectFileName: " << objectFileName);
   std::unordered_map<std::string, std::string> pchSources;
   std::vector<std::string> pchArchs =
     this->GeneratorTarget->GetPchArchs(config, language);
@@ -212,6 +214,7 @@ std::string cmNinjaTargetGenerator::ComputeFlagsForObject(
   if (!flags.empty()) {
     flags += " ";
   }
+
   flags += this->GetFlags(language, config, filterArch);
 
   // Add Fortran format flags.

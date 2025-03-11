@@ -3154,6 +3154,8 @@ std::string cmTarget::ImportedGetFullPath(
              this->impl->TargetType == cmStateEnums::STATIC_LIBRARY ||
              this->impl->TargetType == cmStateEnums::UNKNOWN_LIBRARY) &&
             cmSystemTools::IsPathToXcFramework(result)) {
+          TEPPO_DEBUG_PRINT("Parse XCFramework plist for target \""
+                            << this->GetName() << "\"");
           auto plist = cmParseXcFrameworkPlist(result, *this->impl->Makefile,
                                                this->impl->Backtrace);
           if (!plist) {

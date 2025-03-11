@@ -4,6 +4,7 @@
 
 #include <cm3p/json/reader.h>
 #include <cm3p/json/value.h>
+#include "teppoDebug.h"
 
 #include "cmUVProcessChain.h"
 #include "cmUVStream.h"
@@ -11,6 +12,7 @@
 cm::optional<Json::Value> cmParsePlist(const std::string& filename)
 {
   cmUVProcessChainBuilder builder;
+  TEPPO_DEBUG_PRINT("plutil -convert json -o - " << filename);
   builder.AddCommand(
     { "/usr/bin/plutil", "-convert", "json", "-o", "-", filename });
   builder.SetBuiltinStream(cmUVProcessChainBuilder::Stream_OUTPUT);

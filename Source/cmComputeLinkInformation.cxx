@@ -596,6 +596,7 @@ bool cmComputeLinkInformation::Compute()
     if (linkEntry.Kind == cmComputeLinkDepends::LinkEntry::Group) {
       const auto& groupFeature = this->GetGroupFeature(linkEntry.Feature);
       if (groupFeature.Supported) {
+
         if (linkEntry.Item.Value == "</LINK_GROUP>" && currentFeature) {
           // emit feature suffix, if any
           if (!currentFeature->Suffix.empty()) {
@@ -1172,6 +1173,8 @@ void cmComputeLinkInformation::AddItem(LinkEntry const& entry)
   cmGeneratorTarget const* tgt = entry.Target;
   BT<std::string> const& item = entry.Item;
 
+  TEPPO_DEBUG_PRINT(entry.Feature << " " << entry.Item.Value << " ");
+
   // Compute the proper name to use to link this library.
   const std::string& config = this->Config;
   bool impexe = (tgt && tgt->IsExecutableWithExports());
@@ -1288,6 +1291,7 @@ void cmComputeLinkInformation::AddItem(LinkEntry const& entry)
                 cmSystemTools::IsPathToXcFramework(item.Value) &&
                 this->Target->IsApple())) {
       // This is a framework.
+      TEPPO_DEBUG_PRINT("XCFramework detected: Feature: " << entry.Feature);
       this->AddXcFrameworkItem(entry);
     } else if (cmSystemTools::FileIsFullPath(item.Value)) {
       if (cmSystemTools::FileIsDirectory(item.Value)) {

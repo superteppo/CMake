@@ -28,6 +28,7 @@
 #include "cmStateTypes.h"
 #include "cmSystemTools.h"
 #include "cmValue.h"
+#include "teppoDebug.h"
 
 #if !defined(CMAKE_BOOTSTRAP)
 #  include <cm/optional>

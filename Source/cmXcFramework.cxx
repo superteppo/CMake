@@ -16,7 +16,7 @@
 #include "cmPlistParser.h"
 #include "cmStringAlgorithms.h"
 #include "cmake.h"
-
+#
 namespace {
 struct PlistMetadata
 {
@@ -125,7 +125,7 @@ cm::optional<cmXcFrameworkPlist> cmParseXcFrameworkPlist(
   const cmListFileBacktrace& bt)
 {
   std::string plistPath = cmStrCat(xcframeworkPath, "/Info.plist");
-
+  TEPPO_DEBUG_PRINT("Parsing xcframework .plist file: " << plistPath);
   auto value = cmParsePlist(plistPath);
   if (!value) {
     mf.GetCMakeInstance()->IssueMessage(

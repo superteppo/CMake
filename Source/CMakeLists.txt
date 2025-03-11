@@ -796,6 +796,15 @@ add_library(
 
   bindexplib.cxx
   )
+
+# Add the debug option
+option(TEPPODEBUG "Enable the quick and dirty oneliner debug prints" ON)
+if (TEPPODEBUG)
+  message(WARNING "Option TEPPODEBUG is ON")
+  target_compile_definitions(CMakeLib PUBLIC TEPPODEBUG)
+  target_sources(CMakeLib PUBLIC teppoDebug.h)
+endif()
+
 target_include_directories(
   CMakeLib
   PUBLIC

@@ -2,7 +2,6 @@
    file Copyright.txt or https://cmake.org/licensing for details.  */
 
 #include "cmConfigure.h" // IWYU pragma: keep
-
 #include <algorithm>
 #include <cassert>
 #include <cctype>
@@ -38,7 +37,7 @@
 #include "cmValue.h"
 #include "cmake.h"
 #include "cmcmd.h"
-
+#include "teppoDebug.h"
 #ifndef CMAKE_BOOTSTRAP
 #  include "cmDocumentation.h"
 #  include "cmDynamicLoader.h"
@@ -1127,6 +1126,7 @@ int do_open(int ac, char const* const* av)
 
 int main(int ac, char const* const* av)
 {
+  TEPPO_DEBUG_PRINT("Main begins");
   cmSystemTools::EnsureStdPipes();
 
   // Replace streambuf so we can output Unicode to console
