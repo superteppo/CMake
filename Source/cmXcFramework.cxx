@@ -3,6 +3,7 @@
 #include "cmXcFramework.h"
 
 #include <string>
+#include <unordered_map>
 
 #include <cm/string_view>
 #include <cmext/string_view>
@@ -14,6 +15,7 @@
 #include "cmMakefile.h"
 #include "cmMessageType.h"
 #include "cmPlistParser.h"
+#include "cmSystemTools.h"
 #include "cmStringAlgorithms.h"
 #include "cmake.h"
 
@@ -124,13 +126,22 @@ cm::optional<cmXcFrameworkPlist> cmParseXcFrameworkPlist(
   std::string const& xcframeworkPath, cmMakefile const& mf,
   cmListFileBacktrace const& bt)
 {
-  std::string plistPath = cmStrCat(xcframeworkPath, "/Info.plist");
+  static std::unordered_map<std::string, cm::optional<cmXcFrameworkPlist>> cache;
+
+  std::string xcPath = cmSystemTools::CollapseFullPath(xcframeworkPath);
+
+  if (auto it = cache.find(xcPath); it != cache.end()) {
+    return it->second;
+  }
+
+  std::string plistPath = cmStrCat(xcPath, "/Info.plist");
 
   auto value = cmParsePlist(plistPath);
   if (!value) {
     mf.GetCMakeInstance()->IssueMessage(
       MessageType::FATAL_ERROR,
       cmStrCat("Unable to parse plist file:\n  ", plistPath), bt);
+    cache[xcPath] = cm::nullopt;
     return cm::nullopt;
   }
 
@@ -141,6 +152,7 @@ cm::optional<cmXcFrameworkPlist> cmParseXcFrameworkPlist(
     mf.GetCMakeInstance()->IssueMessage(
       MessageType::FATAL_ERROR,
       cmStrCat("Invalid xcframework .plist file:\n  ", plistPath), bt);
+    cache[xcPath] = cm::nullopt;
     return cm::nullopt;
   }
   if (metadata.CFBundlePackageType != "XFWK"_s ||
@@ -151,6 +163,7 @@ cm::optional<cmXcFrameworkPlist> cmParseXcFrameworkPlist(
                "\nto have CFBundlePackageType \"XFWK\" and "
                "XCFrameworkFormatVersion \"1.0\""),
       bt);
+    cache[xcPath] = cm::nullopt;
     return cm::nullopt;
   }
 
@@ -159,9 +172,11 @@ cm::optional<cmXcFrameworkPlist> cmParseXcFrameworkPlist(
     mf.GetCMakeInstance()->IssueMessage(
       MessageType::FATAL_ERROR,
       cmStrCat("Invalid xcframework .plist file:\n  ", plistPath), bt);
+    cache[xcPath] = cm::nullopt;
     return cm::nullopt;
   }
   plist.Path = plistPath;
+  cache[xcPath] = plist;
   return cm::optional<cmXcFrameworkPlist>(plist);
 }
 

@@ -47,6 +47,13 @@ struct cmXcFrameworkPlist
     cmListFileBacktrace const& bt = cmListFileBacktrace{}) const;
 };
 
+/**
+ * Parse an xcframework's Info.plist.
+ *
+ * Results are cached using the canonical path obtained via
+ * cmSystemTools::CollapseFullPath, so repeated calls with the same
+ * path avoid reparsing the plist.
+ */
 cm::optional<cmXcFrameworkPlist> cmParseXcFrameworkPlist(
   std::string const& xcframeworkPath, cmMakefile const& mf,
   cmListFileBacktrace const& bt = cmListFileBacktrace{});
